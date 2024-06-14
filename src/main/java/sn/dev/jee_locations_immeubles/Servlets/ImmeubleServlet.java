@@ -1,7 +1,7 @@
 package sn.dev.jee_locations_immeubles.Servlets;
 
-import sn.dev.jee_locations_immeubles.dao.UtilisateurDao;
-import sn.dev.jee_locations_immeubles.Entities.Utilisateur;
+import sn.dev.jee_locations_immeubles.dao.ImmeubleDao;
+import sn.dev.jee_locations_immeubles.Entities.Immeuble;
 
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -10,10 +10,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet(name = "UtilisateurServlet", value = "/UtilisateurServlet")
-public class UtilisateurServlet extends HttpServlet {
+@WebServlet(name = "ImmeubleServlet", value = "/ImmeubleServlet")
+public class ImmeubleServlet extends HttpServlet {
 
-    private UtilisateurDao utilisateurDao = new UtilisateurDao();
+    private ImmeubleDao immeubleDao = new ImmeubleDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -28,48 +28,48 @@ public class UtilisateurServlet extends HttpServlet {
                 showNewForm(req, resp);
                 break;
             case "insert":
-                insertUser(req, resp);
+                insertImmeuble(req, resp);
                 break;
             case "delete":
-                deleteUser(req, resp);
+                deleteImmeuble(req, resp);
                 break;
             case "edit":
                 showEditForm(req, resp);
                 break;
             case "update":
-                updateUser(req, resp);
+                updateImmeuble(req, resp);
                 break;
             default:
-                listUser(req, resp);
+                listImmeuble(req, resp);
                 break;
         }
     }
 
-    private void listUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        // List<Utilisateur> listUser = utilisateurDao.getAllUsers();
-        // PrintWriter out = resp.getWriter();
-        // for (Utilisateur user : listUser) {
-        //     out.println("<p>" + user.getName() + "</p>");
-        // }
+    private void listImmeuble(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        List<Immeuble> listImmeuble = immeubleDao.findAll();
+        PrintWriter out = resp.getWriter();
+        for (Immeuble immeuble : listImmeuble) {
+            out.println("<p>" + immeuble.getId() + "</p>");
+        }
     }
 
     private void showNewForm(HttpServletRequest req, HttpServletResponse resp) {
         // implémenter la logique pour afficher le formulaire de création
     }
 
-    private void insertUser(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour insérer un nouvel utilisateur
+    private void insertImmeuble(HttpServletRequest req, HttpServletResponse resp) {
+        // implémenter la logique pour insérer un nouvel immeuble
     }
 
-    private void deleteUser(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour supprimer un utilisateur
+    private void deleteImmeuble(HttpServletRequest req, HttpServletResponse resp) {
+        // implémenter la logique pour supprimer un immeuble
     }
 
     private void showEditForm(HttpServletRequest req, HttpServletResponse resp) {
         // implémenter la logique pour afficher le formulaire de modification
     }
 
-    private void updateUser(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour mettre à jour un utilisateur
+    private void updateImmeuble(HttpServletRequest req, HttpServletResponse resp) {
+        // implémenter la logique pour mettre à jour un immeuble
     }
 }

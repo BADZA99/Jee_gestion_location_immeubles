@@ -1,7 +1,7 @@
 package sn.dev.jee_locations_immeubles.Servlets;
 
-import sn.dev.jee_locations_immeubles.dao.UtilisateurDao;
-import sn.dev.jee_locations_immeubles.Entities.Utilisateur;
+import sn.dev.jee_locations_immeubles.dao.UniteLocationDao;
+import sn.dev.jee_locations_immeubles.Entities.Unitelocation;
 
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -10,10 +10,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet(name = "UtilisateurServlet", value = "/UtilisateurServlet")
-public class UtilisateurServlet extends HttpServlet {
+@WebServlet(name = "UniteLocationServlet", value = "/UniteLocationServlet")
+public class UniteLocationServlet extends HttpServlet {
 
-    private UtilisateurDao utilisateurDao = new UtilisateurDao();
+    private UniteLocationDao uniteLocationDao = new UniteLocationDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -28,28 +28,28 @@ public class UtilisateurServlet extends HttpServlet {
                 showNewForm(req, resp);
                 break;
             case "insert":
-                insertUser(req, resp);
+                insertUnit(req, resp);
                 break;
             case "delete":
-                deleteUser(req, resp);
+                deleteUnit(req, resp);
                 break;
             case "edit":
                 showEditForm(req, resp);
                 break;
             case "update":
-                updateUser(req, resp);
+                updateUnit(req, resp);
                 break;
             default:
-                listUser(req, resp);
+                listUnit(req, resp);
                 break;
         }
     }
 
-    private void listUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        // List<Utilisateur> listUser = utilisateurDao.getAllUsers();
+    private void listUnit(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        // List<Unitelocation> listUnit = uniteLocationDao.findAll();
         // PrintWriter out = resp.getWriter();
-        // for (Utilisateur user : listUser) {
-        //     out.println("<p>" + user.getName() + "</p>");
+        // for (Unitelocation unit : listUnit) {
+        //     out.println("<p>" + unit.getName() + "</p>");
         // }
     }
 
@@ -57,19 +57,19 @@ public class UtilisateurServlet extends HttpServlet {
         // implémenter la logique pour afficher le formulaire de création
     }
 
-    private void insertUser(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour insérer un nouvel utilisateur
+    private void insertUnit(HttpServletRequest req, HttpServletResponse resp) {
+        // implémenter la logique pour insérer une nouvelle unité
     }
 
-    private void deleteUser(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour supprimer un utilisateur
+    private void deleteUnit(HttpServletRequest req, HttpServletResponse resp) {
+        // implémenter la logique pour supprimer une unité
     }
 
     private void showEditForm(HttpServletRequest req, HttpServletResponse resp) {
         // implémenter la logique pour afficher le formulaire de modification
     }
 
-    private void updateUser(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour mettre à jour un utilisateur
+    private void updateUnit(HttpServletRequest req, HttpServletResponse resp) {
+        // implémenter la logique pour mettre à jour une unité
     }
 }
