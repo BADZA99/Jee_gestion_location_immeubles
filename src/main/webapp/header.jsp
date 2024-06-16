@@ -25,7 +25,7 @@
     <div class=" toggle hidden w-full md:w-auto md:flex text-right text-bold mt-5 md:mt-0 md:border-none">
         <a href="#home" class="block md:inline-block hover:text-blue-500 px-3 py-3 md:border-none">Home
         </a>
-        <a href="#services" class="block md:inline-block hover:text-blue-500 px-3 py-3 md:border-none">Services
+        <a href="index-servlet?action=listeImmeubles" class="block md:inline-block hover:text-blue-500 px-3 py-3 md:border-none">Immeubles
         </a>
         <a href="#aboutus" class="block md:inline-block hover:text-blue-500 px-3 py-3 md:border-none">About us
         </a>

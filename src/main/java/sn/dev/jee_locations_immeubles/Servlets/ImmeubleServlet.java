@@ -4,6 +4,8 @@ import sn.dev.jee_locations_immeubles.dao.ImmeubleDao;
 import sn.dev.jee_locations_immeubles.Entities.Immeuble;
 
 import jakarta.servlet.http.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
@@ -25,7 +27,13 @@ public class ImmeubleServlet extends HttpServlet {
         }
         switch (action) {
             case "create":
-                showNewForm(req, resp);
+                try {
+                    showNewForm(req, resp);
+                } catch (ServletException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             case "insert":
                 insertImmeuble(req, resp);
@@ -46,16 +54,14 @@ public class ImmeubleServlet extends HttpServlet {
     }
 
     private void listImmeuble(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        List<Immeuble> listImmeuble = immeubleDao.findAll();
-        PrintWriter out = resp.getWriter();
-        for (Immeuble immeuble : listImmeuble) {
-            out.println("<p>" + immeuble.getId() + "</p>");
-        }
+        List<Immeuble> listImmeuble = immeubleDao.AllImmeubles();
+       
     }
 
-    private void showNewForm(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour afficher le formulaire de création
-    }
+    private void showNewForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/Immeubles/listeImmeubles.jsp");
+    dispatcher.forward(req, resp);
+}
 
     private void insertImmeuble(HttpServletRequest req, HttpServletResponse resp) {
         // implémenter la logique pour insérer un nouvel immeuble

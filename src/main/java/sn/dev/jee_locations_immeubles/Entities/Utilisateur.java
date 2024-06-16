@@ -1,6 +1,7 @@
 package sn.dev.jee_locations_immeubles.Entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Utilisateur {
@@ -16,7 +17,7 @@ public class Utilisateur {
     private String motDePasse;
     @Basic
     @Column(name = "ROLE")
-    private Object role;
+    private String role;
 
     public int getId() {
         return id;
@@ -46,7 +47,7 @@ public class Utilisateur {
         return role;
     }
 
-    public void setRole(Object role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -58,10 +59,10 @@ public class Utilisateur {
         Utilisateur that = (Utilisateur) o;
 
         if (id != that.id) return false;
-        if (nomUtilisateur != null ? !nomUtilisateur.equals(that.nomUtilisateur) : that.nomUtilisateur != null)
+        if (!Objects.equals(nomUtilisateur, that.nomUtilisateur))
             return false;
-        if (motDePasse != null ? !motDePasse.equals(that.motDePasse) : that.motDePasse != null) return false;
-        if (role != null ? !role.equals(that.role) : that.role != null) return false;
+        if (!Objects.equals(motDePasse, that.motDePasse)) return false;
+        if (!Objects.equals(role, that.role)) return false;
 
         return true;
     }

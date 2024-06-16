@@ -1,6 +1,8 @@
 package sn.dev.jee_locations_immeubles.Entities;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 public class Immeuble {
@@ -20,6 +22,11 @@ public class Immeuble {
     @Basic
     @Column(name = "EQUIPEMENTS")
     private String equipements;
+    @Basic
+    @Column(name = "IMAGE")
+    private String image;
+    @OneToMany(mappedBy = "immeubleByImmeubleId")
+    private Collection<Unitelocation> unitelocationsById;
 
     public int getId() {
         return id;
@@ -69,11 +76,11 @@ public class Immeuble {
         Immeuble immeuble = (Immeuble) o;
 
         if (id != immeuble.id) return false;
-        if (nom != null ? !nom.equals(immeuble.nom) : immeuble.nom != null) return false;
-        if (adresse != null ? !adresse.equals(immeuble.adresse) : immeuble.adresse != null) return false;
-        if (description != null ? !description.equals(immeuble.description) : immeuble.description != null)
+        if (!Objects.equals(nom, immeuble.nom)) return false;
+        if (!Objects.equals(adresse, immeuble.adresse)) return false;
+        if (!Objects.equals(description, immeuble.description))
             return false;
-        if (equipements != null ? !equipements.equals(immeuble.equipements) : immeuble.equipements != null)
+        if (!Objects.equals(equipements, immeuble.equipements))
             return false;
 
         return true;
@@ -87,5 +94,26 @@ public class Immeuble {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (equipements != null ? equipements.hashCode() : 0);
         return result;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Collection<Unitelocation> getUnitelocationsById() {
+        return unitelocationsById;
+    }
+
+    public void setUnitelocationsById(Collection<Unitelocation> unitelocationsById) {
+        this.unitelocationsById = unitelocationsById;
+    }
+
+    @Override
+    public String toString() {
+        return "Immeuble [id=" + id + ", nom=" + nom + ", description=" + description + ", adresse=" + adresse + ", equipements=" + equipements + ", image=" + image + "]";
     }
 }

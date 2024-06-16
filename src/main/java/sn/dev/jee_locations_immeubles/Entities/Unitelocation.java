@@ -3,6 +3,7 @@ package sn.dev.jee_locations_immeubles.Entities;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 public class Unitelocation {
@@ -22,14 +23,17 @@ public class Unitelocation {
     @Basic
     @Column(name = "LOYER")
     private BigDecimal loyer;
-    @Basic
-    @Column(name = "IMMEUBLE_ID")
-    private Integer immeubleId;
     @OneToMany(mappedBy = "unitelocationByUniteLocationId")
     private Collection<Contratlocation> contratlocationsById;
     @ManyToOne
     @JoinColumn(name = "IMMEUBLE_ID", referencedColumnName = "ID")
     private Immeuble immeubleByImmeubleId;
+    @Basic
+    @Column(name = "IMAGE")
+    private String image;
+    @Basic
+    @Column(name = "TARIF_LOCATION")
+    private BigDecimal tarifLocation;
 
     public int getId() {
         return id;
@@ -71,41 +75,49 @@ public class Unitelocation {
         this.loyer = loyer;
     }
 
-    public Integer getImmeubleId() {
-        return immeubleId;
-    }
+public Immeuble getImmeubleByImmeubleId() {
+    return immeubleByImmeubleId;
+}
 
-    public void setImmeubleId(Integer immeubleId) {
-        this.immeubleId = immeubleId;
-    }
+public void setImmeubleByImmeubleId(Immeuble immeubleByImmeubleId) {
+    this.immeubleByImmeubleId = immeubleByImmeubleId;
+}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Unitelocation that = (Unitelocation) o;
-
-        if (id != that.id) return false;
-        if (numeroUnite != null ? !numeroUnite.equals(that.numeroUnite) : that.numeroUnite != null) return false;
-        if (nombrePieces != null ? !nombrePieces.equals(that.nombrePieces) : that.nombrePieces != null) return false;
-        if (superficie != null ? !superficie.equals(that.superficie) : that.superficie != null) return false;
-        if (loyer != null ? !loyer.equals(that.loyer) : that.loyer != null) return false;
-        if (immeubleId != null ? !immeubleId.equals(that.immeubleId) : that.immeubleId != null) return false;
-
+   @Override
+public boolean equals(Object o) {
+    if (this == o)
         return true;
-    }
+    if (o == null || getClass() != o.getClass())
+        return false;
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (numeroUnite != null ? numeroUnite.hashCode() : 0);
-        result = 31 * result + (nombrePieces != null ? nombrePieces.hashCode() : 0);
-        result = 31 * result + (superficie != null ? superficie.hashCode() : 0);
-        result = 31 * result + (loyer != null ? loyer.hashCode() : 0);
-        result = 31 * result + (immeubleId != null ? immeubleId.hashCode() : 0);
-        return result;
-    }
+    Unitelocation that = (Unitelocation) o;
+
+    if (id != that.id)
+        return false;
+    if (!Objects.equals(numeroUnite, that.numeroUnite))
+        return false;
+    if (!Objects.equals(nombrePieces, that.nombrePieces))
+        return false;
+    if (!Objects.equals(superficie, that.superficie))
+        return false;
+    if (!Objects.equals(loyer, that.loyer))
+        return false;
+    if (!Objects.equals(immeubleByImmeubleId, that.immeubleByImmeubleId))
+        return false;
+
+    return true;
+}
+
+@Override
+public int hashCode() {
+    int result = id;
+    result = 31 * result + (numeroUnite != null ? numeroUnite.hashCode() : 0);
+    result = 31 * result + (nombrePieces != null ? nombrePieces.hashCode() : 0);
+    result = 31 * result + (superficie != null ? superficie.hashCode() : 0);
+    result = 31 * result + (loyer != null ? loyer.hashCode() : 0);
+    result = 31 * result + (immeubleByImmeubleId != null ? immeubleByImmeubleId.hashCode() : 0);
+    return result;
+}
 
     public Collection<Contratlocation> getContratlocationsById() {
         return contratlocationsById;
@@ -115,11 +127,21 @@ public class Unitelocation {
         this.contratlocationsById = contratlocationsById;
     }
 
-    public Immeuble getImmeubleByImmeubleId() {
-        return immeubleByImmeubleId;
+    
+
+    public String getImage() {
+        return image;
     }
 
-    public void setImmeubleByImmeubleId(Immeuble immeubleByImmeubleId) {
-        this.immeubleByImmeubleId = immeubleByImmeubleId;
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public BigDecimal getTarifLocation() {
+        return tarifLocation;
+    }
+
+    public void setTarifLocation(BigDecimal tarifLocation) {
+        this.tarifLocation = tarifLocation;
     }
 }
