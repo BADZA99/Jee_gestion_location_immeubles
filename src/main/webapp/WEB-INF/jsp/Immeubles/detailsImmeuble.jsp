@@ -3,7 +3,6 @@
 <%@ page import="sn.dev.jee_locations_immeubles.Entities.Immeuble" %>
 <%@ page import="sn.dev.jee_locations_immeubles.dao.ImmeubleDao" %>
 <%@ page import="java.util.List" %>
-
 <jsp:include page="../../../header.jsp" />
 
 <%
@@ -21,7 +20,6 @@
       <div class="mt-3 flex flex-col justify-between rounded-b bg-white leading-normal lg:rounded-b-none lg:rounded-r">
 
         <div class="">
-
           <a href="#" class="text-xs font-medium uppercase text-indigo-600 transition duration-500 ease-in-out hover:text-gray-900"> <%= currentImmeuble.getNom() %> </a>
           <a href="#" class="mb-2 block text-2xl font-bold text-gray-900 transition duration-500 ease-in-out hover:text-indigo-600"><%= currentImmeuble.getDescription() %></a>
           <p class="mt-2 text-base text-gray-700">Adresse: <%= currentImmeuble.getAdresse() %></p>

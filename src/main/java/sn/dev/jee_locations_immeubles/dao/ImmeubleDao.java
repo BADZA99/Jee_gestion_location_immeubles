@@ -53,6 +53,7 @@ public class ImmeubleDao {
 
         return immeubles;
     }
+    
 
     // fonction qui recupere tous les uniteLocation d'un immeuble par son id 
 public List<Unitelocation> getUnitLocationsByImmeubleId(int id) {

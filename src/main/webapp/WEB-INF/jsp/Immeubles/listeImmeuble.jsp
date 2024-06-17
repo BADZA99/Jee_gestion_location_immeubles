@@ -52,21 +52,3 @@
 
 
 
-<!-- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-10 md:px-20">
-    <c:forEach var="immeuble" items="${immeubles}">
-        <div class="bg-white rounded-xl shadow-md overflow-hidden">
-            <div class="relative">
-                <img class="w-full h-48 object-cover" src="${immeuble.image}">
-                <div class="absolute top-0 right-0 bg-indigo-500 text-white font-bold px-2 py-1 m-2 rounded-md">
-                    <a href="detailsImmeuble.jsp?id=${immeuble.id}" target="_blank" rel="noopener noreferrer">details</a>
-                </div>
-            </div>
-            <div class="p-4">
-                <div class="text-lg font-medium text-gray-800 mb-2">${immeuble.getNom()}</div>
-                <p class="text-gray-500 text-sm">${immeuble.getDescription()}</p>
-                <p class="text-gray-500 text-sm">${immeuble.getAdresse()}</p>
-                <p class="text-gray-500 text-sm">${immeuble.getEquipements()}</p>
-            </div>
-        </div>
-    </c:forEach>
-</div> -->
