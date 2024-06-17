@@ -75,49 +75,49 @@ public class Unitelocation {
         this.loyer = loyer;
     }
 
-public Immeuble getImmeubleByImmeubleId() {
-    return immeubleByImmeubleId;
-}
+    public Immeuble getImmeubleByImmeubleId() {
+        return immeubleByImmeubleId;
+    }
 
-public void setImmeubleByImmeubleId(Immeuble immeubleByImmeubleId) {
-    this.immeubleByImmeubleId = immeubleByImmeubleId;
-}
+    public void setImmeubleByImmeubleId(Immeuble immeubleByImmeubleId) {
+        this.immeubleByImmeubleId = immeubleByImmeubleId;
+    }
 
-   @Override
-public boolean equals(Object o) {
-    if (this == o)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Unitelocation that = (Unitelocation) o;
+
+        if (id != that.id)
+            return false;
+        if (!Objects.equals(numeroUnite, that.numeroUnite))
+            return false;
+        if (!Objects.equals(nombrePieces, that.nombrePieces))
+            return false;
+        if (!Objects.equals(superficie, that.superficie))
+            return false;
+        if (!Objects.equals(loyer, that.loyer))
+            return false;
+        if (!Objects.equals(immeubleByImmeubleId, that.immeubleByImmeubleId))
+            return false;
+
         return true;
-    if (o == null || getClass() != o.getClass())
-        return false;
+    }
 
-    Unitelocation that = (Unitelocation) o;
-
-    if (id != that.id)
-        return false;
-    if (!Objects.equals(numeroUnite, that.numeroUnite))
-        return false;
-    if (!Objects.equals(nombrePieces, that.nombrePieces))
-        return false;
-    if (!Objects.equals(superficie, that.superficie))
-        return false;
-    if (!Objects.equals(loyer, that.loyer))
-        return false;
-    if (!Objects.equals(immeubleByImmeubleId, that.immeubleByImmeubleId))
-        return false;
-
-    return true;
-}
-
-@Override
-public int hashCode() {
-    int result = id;
-    result = 31 * result + (numeroUnite != null ? numeroUnite.hashCode() : 0);
-    result = 31 * result + (nombrePieces != null ? nombrePieces.hashCode() : 0);
-    result = 31 * result + (superficie != null ? superficie.hashCode() : 0);
-    result = 31 * result + (loyer != null ? loyer.hashCode() : 0);
-    result = 31 * result + (immeubleByImmeubleId != null ? immeubleByImmeubleId.hashCode() : 0);
-    return result;
-}
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (numeroUnite != null ? numeroUnite.hashCode() : 0);
+        result = 31 * result + (nombrePieces != null ? nombrePieces.hashCode() : 0);
+        result = 31 * result + (superficie != null ? superficie.hashCode() : 0);
+        result = 31 * result + (loyer != null ? loyer.hashCode() : 0);
+        result = 31 * result + (immeubleByImmeubleId != null ? immeubleByImmeubleId.hashCode() : 0);
+        return result;
+    }
 
     public Collection<Contratlocation> getContratlocationsById() {
         return contratlocationsById;
@@ -127,7 +127,7 @@ public int hashCode() {
         this.contratlocationsById = contratlocationsById;
     }
 
-    
+
 
     public String getImage() {
         return image;
@@ -143,5 +143,10 @@ public int hashCode() {
 
     public void setTarifLocation(BigDecimal tarifLocation) {
         this.tarifLocation = tarifLocation;
+    }
+
+     @Override
+    public String toString() {
+        return "uniteloc [id=" + id + ", numeroUnite=" + numeroUnite + ", nombrePieces=" + nombrePieces + ", superficie=" + superficie + ", loyer=" + loyer + ", image=" + image + "]";
     }
 }

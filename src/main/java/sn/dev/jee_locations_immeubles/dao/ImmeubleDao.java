@@ -4,7 +4,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
 import sn.dev.jee_locations_immeubles.Entities.Immeuble;
+import sn.dev.jee_locations_immeubles.Entities.Unitelocation;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImmeubleDao {
@@ -45,11 +50,23 @@ public class ImmeubleDao {
 
     public List<Immeuble> AllImmeubles() {
     List<Immeuble> immeubles = entityManager.createQuery("SELECT i FROM Immeuble i", Immeuble.class).getResultList();
-    for (Immeuble immeuble : immeubles) {
-        System.out.println(immeuble);
+
+        return immeubles;
     }
-    return immeubles;
+
+    // fonction qui recupere tous les uniteLocation d'un immeuble par son id 
+public List<Unitelocation> getUnitLocationsByImmeubleId(int id) {
+    // Récupérer l'objet Immeuble correspondant à l'ID
+    Immeuble immeuble = entityManager.find(Immeuble.class, id);
+    
+    // Utiliser l'objet Immeuble dans la requête
+    List<Unitelocation> unitelocationsByImmeuble = entityManager.createQuery(
+        "SELECT u FROM Unitelocation u WHERE u.immeubleByImmeubleId = :immeuble", Unitelocation.class)
+        .setParameter("immeuble", immeuble)
+        .getResultList();
+
+    return unitelocationsByImmeuble;
+}
 }
 
 
-}

@@ -9,9 +9,9 @@
     %>
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
             <div class="relative">
-           <img class="w-full h-48 object-cover" src="<%= request.getContextPath() + "/images/immeubles/" + immeuble.getImage() %>">
+           <img class="w-full h-48 object-cover" src="<%= request.getContextPath()+"/images/immeubles/"+ immeuble.getImage() %>">
                 <div class="absolute top-0 right-0 bg-indigo-500 text-white font-bold px-2 py-1 m-2 rounded-md">
-                    <a href="detailsImmeuble.jsp?id=<%= immeuble.getId() %>" target="_blank" rel="noopener noreferrer">details</a>
+                      <a href="index-servlet?id=<%= immeuble.getId() %>">details</a>
                 </div>
             </div>
             <div class="p-4">

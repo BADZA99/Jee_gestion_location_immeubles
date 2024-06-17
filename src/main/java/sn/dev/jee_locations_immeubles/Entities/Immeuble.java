@@ -112,8 +112,5 @@ public class Immeuble {
         this.unitelocationsById = unitelocationsById;
     }
 
-    @Override
-    public String toString() {
-        return "Immeuble [id=" + id + ", nom=" + nom + ", description=" + description + ", adresse=" + adresse + ", equipements=" + equipements + ", image=" + image + "]";
-    }
+
 }
