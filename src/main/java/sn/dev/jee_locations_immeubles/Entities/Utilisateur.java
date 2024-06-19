@@ -53,7 +53,7 @@ public Utilisateur(String nomUtilisateur, String motDePasse, String role) {
         this.motDePasse = motDePasse;
     }
 
-    public Object getRole() {
+    public String getRole() {
         return role;
     }
 

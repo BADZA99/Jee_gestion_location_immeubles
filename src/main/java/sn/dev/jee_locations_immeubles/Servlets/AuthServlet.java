@@ -2,6 +2,8 @@ package sn.dev.jee_locations_immeubles.Servlets;
 
 import java.io.*;
 import java.util.*;
+
+
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.RequestDispatcher;
@@ -92,15 +94,22 @@ public class AuthServlet extends HttpServlet {
             if (user != null) {
                 // L'utilisateur existe, la connexion est réussie
                 HttpSession session = request.getSession();
-                session.setAttribute("user", user);
-
+                request.setAttribute("user", user);
+                //System.out.println(user);
                 // Si la connexion est réussie, définissez l'attribut "success"
                 request.setAttribute("status", "success");
-                request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
-                
+                if(user.getRole().equals("LOCATAIRE")){
+                    request.getRequestDispatcher("/WEB-INF/jsp/Locataire.jsp").forward(request, response);
+                }else if (user.getRole().equals("PROPRIETAIRE")) {
+                    request.getRequestDispatcher("/WEB-INF/jsp/Proprietaire.jsp").forward(request, response);
+                }else{
+                    request.getRequestDispatcher("/WEB-INF/jsp/Admin.jsp").forward(request, response);
+                }
+
             } else {
                 // L'utilisateur n'existe pas, la connexion a échoué
                 request.setAttribute("status", "error");
+                request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
             }
         } catch (Exception e) {
             // Si la connexion échoue, définissez l'attribut "failed"

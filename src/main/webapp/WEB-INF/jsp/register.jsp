@@ -11,7 +11,7 @@
             <div>
                  <input type="hidden" name="action" value="register">
                  <input type="hidden" id="status" value="<%=status%>">
-                <label class="block font-semibold" for="name">Nom</label>
+                <label class="block font-semibold" for="nom">Nom</label>
                 <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="nom" type="text" name="nom" required="required" autofocus="autofocus">
             </div>
 
@@ -26,7 +26,7 @@
             </div>
          
             <div class="mt-4">
-                <label class="block font-semibold" for="password">Mot de passe</label>
+                <label class="block font-semibold" for="mdp">Mot de passe</label>
                 <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="mdp" type="password" name="mdp" required="required" autocomplete="new-password">
             </div>
 
