@@ -7,6 +7,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import sn.dev.jee_locations_immeubles.Entities.Immeuble;
 import sn.dev.jee_locations_immeubles.Entities.Unitelocation;
+import sn.dev.jee_locations_immeubles.Entities.Utilisateur;
+import sn.dev.jee_locations_immeubles.Entities.Locataire;
 import sn.dev.jee_locations_immeubles.dao.ImmeubleDao;
 import jakarta.servlet.annotation.*;
 
@@ -61,10 +63,8 @@ public class index extends HttpServlet {
         // affiche dans la console les immeuble
         request.setAttribute("immeubles", immeubles); 
         request.getRequestDispatcher("/WEB-INF/jsp/Immeubles/listeImmeuble.jsp").forward(request, response);
-        }else if (action.equals("detailsImmeuble")) {
-            request.setAttribute("idParam", idParam);
-            request.getRequestDispatcher("/WEB-INF/jsp/Immeubles/detailsImmeuble.jsp").forward(request, response);
         }
+        
     }
 
     public void destroy() {

@@ -18,6 +18,16 @@ public class Utilisateur {
     @Basic
     @Column(name = "ROLE")
     private String role;
+public Utilisateur(String nomUtilisateur, String motDePasse, String role) {
+    this.nomUtilisateur = nomUtilisateur;
+    this.motDePasse = motDePasse;
+    this.role = role;
+}
+    public Utilisateur() {
+
+    }
+
+   
 
     public int getId() {
         return id;
@@ -74,5 +84,9 @@ public class Utilisateur {
         result = 31 * result + (motDePasse != null ? motDePasse.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
         return result;
+    }
+
+    public String toString() {
+        return "uniteloc [id=" + id + ", nomUtilisateur=" + nomUtilisateur + ", motDePasse=" + motDePasse + ", role=" + role + "]";
     }
 }
