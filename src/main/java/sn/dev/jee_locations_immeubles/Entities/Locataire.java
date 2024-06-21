@@ -20,6 +20,14 @@ public class Locataire {
     private String motDePasse;
     @OneToMany(mappedBy = "locataireByLocataireId")
     private Collection<Contratlocation> contratlocationsById;
+    @Basic
+    @Column(name = "ID_UTILISATEUR")
+    private Integer idUtilisateur;
+
+
+    public Locataire() {
+
+    }
 
     public int getId() {
         return id;
@@ -83,5 +91,17 @@ public class Locataire {
 
     public void setContratlocationsById(Collection<Contratlocation> contratlocationsById) {
         this.contratlocationsById = contratlocationsById;
+    }
+
+    public Integer getIdUtilisateur() {
+        return idUtilisateur;
+    }
+
+    public void setIdUtilisateur(Integer idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
+    }
+
+     public String toString() {
+        return "locataire [id=" + id + ", nom=" + nom + ", motDePasse=" + motDePasse + ", idUser=" + idUtilisateur + "]";
     }
 }

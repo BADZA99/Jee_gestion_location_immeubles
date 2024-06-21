@@ -70,6 +70,6 @@ public class LocataireServlet extends HttpServlet {
     }
 
     private void updateLocataire(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour mettre à jour un locataire
+
     }
 }

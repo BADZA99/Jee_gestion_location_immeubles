@@ -1,6 +1,8 @@
 package sn.dev.jee_locations_immeubles.dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import sn.dev.jee_locations_immeubles.Entities.Unitelocation;
 import java.util.List;
@@ -10,6 +12,10 @@ public class UniteLocationDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public UniteLocationDao() {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("default");
+        this.entityManager = factory.createEntityManager();
+    }
     public Unitelocation save(Unitelocation unitelocation) {
         entityManager.persist(unitelocation);
         return unitelocation;

@@ -5,12 +5,16 @@
     http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
     <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>sn.dev.jee_locations_immeubles.Entities.Locataire</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/location_immeubles" />
             <property name="javax.persistence.jdbc.user" value="root" />
             <property name="javax.persistence.jdbc.password" value="" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/location_immeubles"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="hibernate.connection.username" value="root"/>
             <!-- <property name="hibernate.hbm2ddl.auto" value="update" /> -->
         </properties>
     </persistence-unit>

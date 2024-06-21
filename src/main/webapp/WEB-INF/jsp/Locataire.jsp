@@ -1,8 +1,10 @@
 <%@ page import="java.util.List" %>
-<%@ page import="sn.dev.jee_locations_immeubles.Entities.Utilisateur" %>
+<%@ page import="sn.dev.jee_locations_immeubles.Entities.Unitelocation" %>
+<%@ page import="sn.dev.jee_locations_immeubles.Entities.Locataire" %>
 <jsp:include page="../../header.jsp" />
 <%
-    Utilisateur connctedUser = (Utilisateur) request.getAttribute("user");
+    Locataire connctedUser = (Locataire) request.getAttribute("user");
+    List<Unitelocation> allUniteLocations = (List<Unitelocation>) request.getAttribute("AllUniteLocations");
 %>
 <div class="bg-gray-100">
     <div class="h-screen flex overflow-hidden bg-gray-200">
@@ -26,7 +28,7 @@
             <div class="bg-white shadow">
                 <div class="container mx-auto">
                     <div class="flex justify-between items-center py-4 px-2">
-                        <h1 class="text-xl font-semibold">WELCOME Locataire <%=connctedUser.getNomUtilisateur()%></h1>
+                        <h1 class="text-xl font-semibold">WELCOME Locataire <%=connctedUser.getNom()%></h1>
                         <button class="text-gray-500 hover:text-gray-600" id="open-sidebar">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -62,11 +64,11 @@
 
     const pages = {
         home: `
-             <form action="AuthServlet-servlet" method="post" class="w-[60%] mx-auto">
+             <form action="LocataireServlet" method="post" class="w-[60%] mx-auto">
             <div>
-                 <input type="hidden" name="action" value="register">
+                 <input type="hidden" name="action" value="update">
                 <label class="block font-semibold" for="nom">Nom</label>
-                <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="nom" type="text" name="nom" required="required" autofocus="autofocus">
+                <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="nom" type="text" name="nom" required="required" autofocus="autofocus" value="<%=connctedUser.getNom()%>">
             </div>
 
             <div class="mt-4">
@@ -98,34 +100,18 @@
                     Full name
                 </dt>
                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    John Doe
+                    <%=connctedUser.getNom()%>
                 </dd>
             </div>
             <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt class="text-sm font-medium text-gray-500">
-                    Email address
+                    Role
                 </dt>
                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    johndoe@example.com
+                 LOCATAIRE
                 </dd>
             </div>
-            <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt class="text-sm font-medium text-gray-500">
-                    Phone number
-                </dt>
-                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    (123) 456-7890
-                </dd>
-            </div>
-            <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt class="text-sm font-medium text-gray-500">
-                    Address
-                </dt>
-                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    123 Main St<br>
-                     Anytown, USA 12345
-                </dd>
-            </div>
+
         </dl>
     </div>
 </div>
@@ -153,98 +139,35 @@
     </div>
 
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-
-        <!-- CARD 1 -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+    <%
+    if(allUniteLocations != null) {
+        for(Unitelocation uniteLocation : allUniteLocations) {
+    %>
         <div class="rounded overflow-hidden shadow-lg flex flex-col">
-            <a href="#"></a>
-            <div class="relative"><a href="#">
-                    <img class="w-full"
-                        src="https://images.pexels.com/photos/61180/pexels-photo-61180.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                        alt="Sunset in the mountains">
-                    <div
-                        class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
-                    </div>
-                </a>
-                <a href="#!">
-                    <div
-                        class="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                     demande location
-                    </div>
-                </a>
+            <div class="relative">
+                <img class="w-full" src=" <%= request.getContextPath()+"/images/uniteLocation/"+ uniteLocation.getImage() %>" alt="Image de l'unité">
+
             </div>
             <div class="px-6 py-4 mb-auto">
-                <a href="#"
-                    class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">Simplest
-                    Salad Recipe ever</a>
-                <p class="text-gray-500 text-sm">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                </p>
-            </div>
-
-        </div>
-
-
-
-        <!-- CARD 2 -->
-        <div class="rounded overflow-hidden shadow-lg flex flex-col">
-            <a href="#"></a>
-            <div class="relative"><a href="#">
-                    <img class="w-full"
-                        src="https://images.pexels.com/photos/1600727/pexels-photo-1600727.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                        alt="Sunset in the mountains">
-                    <div
-                        class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
-                    </div>
-                </a><a href="#!">
-                    <div
-                        class="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                        Cooking
-                    </div>
+                <a href="#" class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">
+                    <%= uniteLocation.getNumeroUnite() %>
                 </a>
-            </div>
-            <div class="px-6 py-4 mb-auto">
-                <a href="#"
-                    class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">Best
-                    FastFood Ideas (Yummy)</a>
                 <p class="text-gray-500 text-sm">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                    Nombre de pièces: <%= uniteLocation.getNombrePieces() %><br>
+                    Superficie: <%= uniteLocation.getSuperficie() %> m²<br>
+                    Loyer: <%= uniteLocation.getLoyer() %> fcfa/mois
                 </p>
             </div>
-
-        </div>
-
-
-
-        <!-- CARD 3 -->
-        <div class="rounded overflow-hidden shadow-lg flex flex-col">
-            <a href="#"></a>
-            <div class="relative"><a href="#">
-                    <img class="w-full"
-                        src="https://images.pexels.com/photos/6086/food-salad-healthy-vegetables.jpg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                        alt="Sunset in the mountains">
-                    <div
-                        class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
-                    </div>
-                </a><a href="#!">
-                    <div
-                        class="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                        Cooking
-                    </div>
+              <a href="<%= uniteLocation.getId() %>" class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">
+                    demander location
                 </a>
-            </div>
-            <div class="px-6 py-4 mb-auto">
-                <a href="#"
-                    class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">Why
-                    to eat salad?</a>
-                <p class="text-gray-500 text-sm">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                </p>
-            </div>
-
         </div>
-
-    </div>
+    <% 
+        }
+    } 
+    %>
+</div>
 
 </div>
       `,

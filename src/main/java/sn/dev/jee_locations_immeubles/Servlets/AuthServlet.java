@@ -9,17 +9,26 @@ import jakarta.servlet.annotation.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import sn.dev.jee_locations_immeubles.Entities.Utilisateur;
+import sn.dev.jee_locations_immeubles.Entities.Locataire;
+import sn.dev.jee_locations_immeubles.Entities.Unitelocation;
 import sn.dev.jee_locations_immeubles.dao.UtilisateurDao;
-
+import sn.dev.jee_locations_immeubles.dao.LocataireDao;
+import sn.dev.jee_locations_immeubles.dao.UniteLocationDao;
 
 @WebServlet(name = "AuthServletServlet", value = "/AuthServlet-servlet")
 public class AuthServlet extends HttpServlet {
     private String message;
 
    private UtilisateurDao userDao;
+   private LocataireDao LocataireDao;
+    private List<Unitelocation> AllUniteLocations;
+    private UniteLocationDao UniteLocationDao;
     public void init() {
         message = "error action null";
         this.userDao = new UtilisateurDao();
+        this.LocataireDao = new LocataireDao();
+        this.UniteLocationDao = new UniteLocationDao();
+        AllUniteLocations=  UniteLocationDao.findAll();
         //  immeubles = immeubleDao.AllImmeubles();
 
     }
@@ -57,6 +66,16 @@ public class AuthServlet extends HttpServlet {
             System.out.println("avant save "+ user);
             userDao.save(user);
 
+            if(user.getRole().equals("LOCATAIRE")){
+                Locataire locataire = new Locataire();
+                locataire.setNom(name);
+                locataire.setMotDePasse(password);
+                locataire.setIdUtilisateur(user.getId());
+                locataire.setEmail("");
+                LocataireDao.save(locataire);
+                System.out.println("New loc "+ LocataireDao.save(locataire));
+            }
+
             if(userDao.save(user)!= null){
                 System.out.println(userDao.save(user));
                 //System.out.println("insertion reussi");
@@ -90,11 +109,13 @@ public class AuthServlet extends HttpServlet {
         try {
             // Vérifiez si un utilisateur avec le nom et le mot de passe donnés existe dans la base de données
             Utilisateur user = userDao.findUserByNameAndPassword(name, password);
+            Locataire loc=LocataireDao.findLocataireByUtilisateurId(user.getId());
 
-            if (user != null) {
+            if (user != null && loc != null ) {
                 // L'utilisateur existe, la connexion est réussie
-                HttpSession session = request.getSession();
-                request.setAttribute("user", user);
+                //HttpSession session = request.getSession();
+                request.setAttribute("user", loc);
+                request.setAttribute("AllUniteLocations", AllUniteLocations);
                 //System.out.println(user);
                 // Si la connexion est réussie, définissez l'attribut "success"
                 request.setAttribute("status", "success");

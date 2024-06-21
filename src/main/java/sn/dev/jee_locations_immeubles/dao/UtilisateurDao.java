@@ -3,6 +3,7 @@ package sn.dev.jee_locations_immeubles.dao;
 import javax.persistence.*;
 
 import sn.dev.jee_locations_immeubles.Entities.Utilisateur;
+import sn.dev.jee_locations_immeubles.Entities.Locataire;
 import java.util.List;
 
 public class UtilisateurDao {
@@ -17,11 +18,6 @@ public class UtilisateurDao {
 
     public Utilisateur save(Utilisateur utilisateur) {
         EntityTransaction transaction = this.entityManager.getTransaction();
-        //Utilisateur existingUser = this.entityManager.createQuery("SELECT u FROM Utilisateur u WHERE u.nomUtilisateur = :name", Utilisateur.class)
-                //.setParameter("name", utilisateur.getNomUtilisateur())
-                //.getSingleResult();
-
-
         try {
             transaction.begin();
             entityManager.persist(utilisateur);
