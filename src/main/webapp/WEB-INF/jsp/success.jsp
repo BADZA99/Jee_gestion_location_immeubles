@@ -8,9 +8,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>success page</title>
 </head>
 <body>
-user updated avec success
+action reussie
 </body>
 </html>

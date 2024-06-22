@@ -28,6 +28,9 @@ public class Immeuble {
     @OneToMany(mappedBy = "immeubleByImmeubleId")
     private Collection<Unitelocation> unitelocationsById;
 
+    public Immeuble() {
+
+    }
     public int getId() {
         return id;
     }

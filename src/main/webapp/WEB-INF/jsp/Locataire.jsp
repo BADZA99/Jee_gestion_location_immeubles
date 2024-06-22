@@ -217,9 +217,10 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.12.0/dist/sweetalert2.min.css
                     Loyer: <%= uniteLocation.getLoyer() %> fcfa/mois
                 </p>
             </div>
-              <a href="<%= uniteLocation.getId() %>" class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">
-                    demander location
-                </a>
+              <a href="LocataireServlet?action=demandeLoc&idUniteLoc=<%= uniteLocation.getId() %>&idLocataire=<%= connctedUser.getId() %>" class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">
+    demander location
+</a>
+
         </div>
     <% 
         }

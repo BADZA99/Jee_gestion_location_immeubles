@@ -2,6 +2,7 @@ package sn.dev.jee_locations_immeubles.Entities;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 public class Locataire {
@@ -69,9 +70,9 @@ public class Locataire {
         Locataire locataire = (Locataire) o;
 
         if (id != locataire.id) return false;
-        if (nom != null ? !nom.equals(locataire.nom) : locataire.nom != null) return false;
-        if (email != null ? !email.equals(locataire.email) : locataire.email != null) return false;
-        if (motDePasse != null ? !motDePasse.equals(locataire.motDePasse) : locataire.motDePasse != null) return false;
+        if (!Objects.equals(nom, locataire.nom)) return false;
+        if (!Objects.equals(email, locataire.email)) return false;
+        if (!Objects.equals(motDePasse, locataire.motDePasse)) return false;
 
         return true;
     }

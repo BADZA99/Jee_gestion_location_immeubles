@@ -26,7 +26,20 @@ public class Contratlocation {
     @OneToMany(mappedBy = "contratlocationByContratLocationId")
     private Collection<Paiement> paiementsById;
 
-  public int getId() {
+
+
+
+
+
+    @Basic
+    @Column(name = "Statut")
+    private String statut;
+
+    public Contratlocation() {
+
+    }
+
+    public int getId() {
         return id;
     }
 
@@ -91,5 +104,41 @@ public class Contratlocation {
     public int hashCode() {
         return Objects.hash(id, dateDebut, dateFin, unitelocationByUniteLocationId, locataireByLocataireId, paiementsById);
     }
-  
+
+    //public Integer getUniteLocationId() {
+    //return uniteLocationId;
+    //}
+
+    //public void setUniteLocationId(Integer uniteLocationId) {
+    //this.uniteLocationId = uniteLocationId;
+    //}
+
+    // public Integer getLocataireId() {
+    //     return locataireId;
+    // }
+
+    // public void setLocataireId(Integer locataireId) {
+    //     this.locataireId = locataireId;
+    // }
+
+    public String getStatut() {
+        return statut;
+    }
+
+    public void setStatut(String statut) {
+        this.statut = statut;
+    }
+
+    @Override
+    public String toString() {
+        return "Contratlocation{" +
+                "id=" + id +
+                ", dateDebut=" + dateDebut +
+                ", dateFin=" + dateFin +
+                ", unitelocationByUniteLocationId=" + (unitelocationByUniteLocationId != null ? unitelocationByUniteLocationId.getId() : "null") +
+                ", locataireByLocataireId=" + (locataireByLocataireId != null ? locataireByLocataireId.getId() : "null") +
+                ", statut='" + statut + '\'' +
+                '}';
+    }
+
 }
