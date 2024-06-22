@@ -30,12 +30,27 @@ public class UtilisateurDao {
             throw e;
         }
         //System.out.println("apres save "+ utilisateur);
+        
         return utilisateur;
     }
 
+    // update le ueser correspondant au locataire
+
     public Utilisateur update(Utilisateur utilisateur) {
-        return entityManager.merge(utilisateur);
+    EntityTransaction transaction = this.entityManager.getTransaction();
+    try {
+        transaction.begin();
+        utilisateur = entityManager.merge(utilisateur);
+        entityManager.flush();
+        transaction.commit();
+    } catch (RuntimeException e) {
+        if (transaction.isActive()) {
+            transaction.rollback();
+        }
+        throw e;
     }
+    return utilisateur;
+}
 
     public void delete(int id) {
         Utilisateur utilisateur = entityManager.find(Utilisateur.class, id);
@@ -45,7 +60,21 @@ public class UtilisateurDao {
     }
 
     public Utilisateur find(int id) {
-        return entityManager.find(Utilisateur.class, id);
+        EntityTransaction transaction = this.entityManager.getTransaction();
+        Utilisateur utilisateur;
+        try {
+            transaction.begin();
+            utilisateur = entityManager.find(Utilisateur.class, id);
+            entityManager.flush();
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        }
+        return utilisateur;
+
     }
 
     public List<Utilisateur> findAll() {

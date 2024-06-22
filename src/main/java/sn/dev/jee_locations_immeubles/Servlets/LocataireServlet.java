@@ -1,10 +1,14 @@
 package sn.dev.jee_locations_immeubles.Servlets;
 
+import jakarta.servlet.ServletException;
+import sn.dev.jee_locations_immeubles.Entities.Utilisateur;
 import sn.dev.jee_locations_immeubles.dao.LocataireDao;
 import sn.dev.jee_locations_immeubles.Entities.Locataire;
 
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import sn.dev.jee_locations_immeubles.dao.UniteLocationDao;
+import sn.dev.jee_locations_immeubles.dao.UtilisateurDao;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,63 +17,59 @@ import java.util.List;
 @WebServlet(name = "LocataireServlet", value = "/LocataireServlet")
 public class LocataireServlet extends HttpServlet {
 
-    private LocataireDao locataireDao = new LocataireDao();
+    private LocataireDao LocataireDao;
+    private UtilisateurDao UtilisateurDao;
+    public void init() {
+        this.LocataireDao = new LocataireDao();
+        this.UtilisateurDao = new UtilisateurDao();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
 
-        String action = req.getParameter("action");
-        if (action == null) {
-            action = "list";
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ServletException {
+        String nom = request.getParameter("nom");
+        String mdp = request.getParameter("mdp");
+        //idUtilisateur
+        int idLoc = Integer.parseInt(request.getParameter("idLoc"));
+        int idUtilisateur = Integer.parseInt(request.getParameter("idUtilisateur"));
+        if (nom != null && mdp != null && !nom.isEmpty() && !mdp.isEmpty()) {
+
+            Locataire locataire = LocataireDao.find(idLoc);
+            Utilisateur utilisateur = UtilisateurDao.find(idUtilisateur);
+            if (locataire != null && utilisateur != null) {
+                locataire.setNom(nom);
+                locataire.setMotDePasse(mdp);
+                utilisateur.setNomUtilisateur(nom);
+                utilisateur.setMotDePasse(mdp);
+                // Supposons que updateLocataire met à jour l'objet dans la base de données
+                LocataireDao.update(locataire);
+                UtilisateurDao.update(utilisateur);
+                if(LocataireDao.update(locataire) != null && UtilisateurDao.update(utilisateur) != null ){
+                    System.out.println("locataire mis a jour ");
+                    System.out.println("user correspondant  mis a jour");
+                    System.out.println(LocataireDao.update(locataire));
+                    System.out.println(UtilisateurDao.update(utilisateur));
+                }else {
+                    System.out.println("erreur maj loacataire");
+                }
+                // Redirection ou message de succès
+                request.setAttribute("status", "success");
+                request.getRequestDispatcher("/WEB-INF/jsp/success.jsp").forward(request, response);
+            } else {
+                // Gérer l'erreur : locataire non trouvé
+                request.setAttribute("status", "error");
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            }
+        } else {
+            // Gérer l'erreur : données invalides
+            request.setAttribute("status", "Données invalides");
+            request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
         }
-        switch (action) {
-            case "create":
-                showNewForm(req, resp);
-                break;
-            case "insert":
-                insertLocataire(req, resp);
-                break;
-            case "delete":
-                deleteLocataire(req, resp);
-                break;
-            case "edit":
-                showEditForm(req, resp);
-                break;
-            case "update":
-                updateLocataire(req, resp);
-                break;
-            default:
-                listLocataire(req, resp);
-                break;
-        }
     }
 
-    private void listLocataire(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        List<Locataire> listLocataire = locataireDao.findAll();
-        PrintWriter out = resp.getWriter();
-        for (Locataire locataire : listLocataire) {
-            out.println("<p>" + locataire.getId() + "</p>");
-        }
-    }
-
-    private void showNewForm(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour afficher le formulaire de création
-    }
-
-    private void insertLocataire(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour insérer un nouveau locataire
-    }
-
-    private void deleteLocataire(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour supprimer un locataire
-    }
-
-    private void showEditForm(HttpServletRequest req, HttpServletResponse resp) {
-        // implémenter la logique pour afficher le formulaire de modification
-    }
-
-    private void updateLocataire(HttpServletRequest req, HttpServletResponse resp) {
-
-    }
 }

@@ -1,12 +1,60 @@
 <%@ page import="java.util.List" %>
 <%@ page import="sn.dev.jee_locations_immeubles.Entities.Unitelocation" %>
 <%@ page import="sn.dev.jee_locations_immeubles.Entities.Locataire" %>
-<jsp:include page="../../header.jsp" />
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSP - Hello World</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- nav bar section -->
+<nav class="flex flex-wrap items-center justify-between p-3 bg-[#e8e8e5]">
+    <div class="text-xl">BNLocation</div>
+    <div class="flex md:hidden">
+        <button id="hamburger">
+            <img class="toggle block" src="https://img.icons8.com/fluent-systems-regular/2x/menu-squared-2.png" width="40" height="40" />
+            <img class="toggle hidden" src="https://img.icons8.com/fluent-systems-regular/2x/close-window.png" width="40" height="40" />
+        </button>
+    </div>
+    <div class=" toggle hidden w-full md:w-auto md:flex text-right text-bold mt-5 md:mt-0 md:border-none">
+        <a href="#home" class="block md:inline-block hover:text-blue-500 px-3 py-3 md:border-none">Home
+        </a>
+        <a href="index-servlet?action=listeImmeubles" class="block md:inline-block hover:text-blue-500 px-3 py-3 md:border-none">Immeubles
+        </a>
+        <a href="#aboutus" class="block md:inline-block hover:text-blue-500 px-3 py-3 md:border-none">About us
+        </a>
+
+    </div>
+
+    <div class="toggle w-full text-end hidden md:flex md:w-auto px-2 py-2 md:rounded">
+        <a href="AuthServlet-servlet?action=logout">
+            <div class="flex justify-end">
+                <div class="flex items-center h-10 w-30 rounded-md bg-[#c8a876] text-white font-medium p-2">
+                    logout
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+</nav>
+
 <%
-    Locataire connctedUser = (Locataire) request.getAttribute("user");
+    Locataire connctedUser = (Locataire) session.getAttribute("user");
     List<Unitelocation> allUniteLocations = (List<Unitelocation>) request.getAttribute("AllUniteLocations");
+    String status = (String) request.getAttribute("status");
 %>
 <div class="bg-gray-100">
+           <input type="hidden" id="status" value="<%=status%>">
     <div class="h-screen flex overflow-hidden bg-gray-200">
         <!-- Sidebar -->
         <div class="absolute bg-gray-800 text-white w-56 min-h-screen overflow-y-auto sidebar transform -translate-x-full ease-in-out duration-300"
@@ -45,11 +93,19 @@
         </div>
     </div>
 </div>
+<script src="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.12.0/dist/sweetalert2.all.min.js
+"></script>
 
+<link href="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.12.0/dist/sweetalert2.min.css
+" rel="stylesheet">
 <script>
     const sidebar = document.getElementById('sidebar');
     const openSidebarButton = document.getElementById('open-sidebar');
     const content = document.getElementById('content');
+
+   
 
     openSidebarButton.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -67,6 +123,8 @@
              <form action="LocataireServlet" method="post" class="w-[60%] mx-auto">
             <div>
                  <input type="hidden" name="action" value="update">
+                  <input type="hidden" name="idLoc" value="<%=connctedUser.getId()%>">
+                   <input type="hidden" name="idUtilisateur" value="<%=connctedUser.getIdUtilisateur()%>">
                 <label class="block font-semibold" for="nom">Nom</label>
                 <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="nom" type="text" name="nom" required="required" autofocus="autofocus" value="<%=connctedUser.getNom()%>">
             </div>

@@ -31,7 +31,19 @@ public class LocataireDao {
     }
 
     public Locataire update(Locataire locataire) {
-        return entityManager.merge(locataire);
+        EntityTransaction transaction = this.entityManager.getTransaction();
+        try {
+            transaction.begin();
+            locataire = entityManager.merge(locataire);
+            entityManager.flush();
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        }
+        return locataire;
     }
 
     public void delete(int id) {

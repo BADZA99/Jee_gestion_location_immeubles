@@ -1,9 +1,56 @@
 <%@ page import="java.util.List" %>
 <%@ page import="sn.dev.jee_locations_immeubles.Entities.Utilisateur" %>
-<jsp:include page="../../header.jsp" />
+
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
-    Utilisateur connctedUser = (Utilisateur) request.getAttribute("user");
+    Utilisateur connctedUser = (Utilisateur) session.getAttribute("user");
 %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSP - Hello World</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- nav bar section -->
+<nav class="flex flex-wrap items-center justify-between p-3 bg-[#e8e8e5]">
+    <div class="text-xl">BNLocation</div>
+    <div class="flex md:hidden">
+        <button id="hamburger">
+            <img class="toggle block" src="https://img.icons8.com/fluent-systems-regular/2x/menu-squared-2.png" width="40" height="40" />
+            <img class="toggle hidden" src="https://img.icons8.com/fluent-systems-regular/2x/close-window.png" width="40" height="40" />
+        </button>
+    </div>
+    <div class=" toggle hidden w-full md:w-auto md:flex text-right text-bold mt-5 md:mt-0 md:border-none">
+        <a href="#home" class="block md:inline-block hover:text-blue-500 px-3 py-3 md:border-none">Home
+        </a>
+        <a href="index-servlet?action=listeImmeubles" class="block md:inline-block hover:text-blue-500 px-3 py-3 md:border-none">Immeubles
+        </a>
+        <a href="#aboutus" class="block md:inline-block hover:text-blue-500 px-3 py-3 md:border-none">About us
+        </a>
+
+    </div>
+
+    <div class="toggle w-full text-end hidden md:flex md:w-auto px-2 py-2 md:rounded">
+        <a href="AuthServlet-servlet?action=logout">
+            <div class="flex justify-end">
+                <div class="flex items-center h-10 w-30 rounded-md bg-[#c8a876] text-white font-medium p-2">
+                    logout
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+</nav>
+
 <div class="bg-gray-100">
     <div class="h-screen flex overflow-hidden bg-black-200">
         <!-- Sidebar -->
@@ -92,11 +139,13 @@
 
     const pages = {
         home: `
-             <form action="AuthServlet-servlet" method="post" class="w-[60%] mx-auto">
+            <form action="LocataireServlet" method="post" class="w-[60%] mx-auto">
             <div>
-                 <input type="hidden" name="action" value="register">
+                 <input type="hidden" name="action" value="update">
+                  <input type="hidden" name="idAdmin" value="<%=connctedUser.getId()%>">
+
                 <label class="block font-semibold" for="nom">Nom</label>
-                <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="nom" type="text" name="nom" required="required" autofocus="autofocus">
+                <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="nom" type="text" name="nom" required="required" autofocus="autofocus" value="<%=connctedUser.getNomUtilisateur()%>">
             </div>
 
             <div class="mt-4">
@@ -111,6 +160,7 @@
         </form>
 
       `,
+
         about: `
        <div class="bg-white overflow-hidden shadow rounded-lg border">
     <div class="px-4 py-5 sm:px-6">

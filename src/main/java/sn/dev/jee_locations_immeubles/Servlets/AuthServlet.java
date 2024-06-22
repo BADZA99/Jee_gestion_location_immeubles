@@ -33,7 +33,7 @@ public class AuthServlet extends HttpServlet {
 
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");
 
         // Hello
@@ -41,6 +41,14 @@ public class AuthServlet extends HttpServlet {
         out.println("<html><body>");
         out.println("<h1>" + message + "</h1>");
         out.println("</body></html>");
+        String action = request.getParameter("action");
+         if ("logout".equals(action)) {
+            // Invalider la session pour déconnecter l'utilisateur
+            request.getSession().invalidate();
+
+            // Rediriger l'utilisateur vers la page de connexion ou la page d'accueil
+            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
+        }
     }
 
     // dopost 
@@ -95,38 +103,73 @@ public class AuthServlet extends HttpServlet {
         }
 
    
-    } else if ("login".equals(action)) {
+    } else if ("update".equals(action)) {
+        String nomloc = request.getParameter("nom");
+        String mdp = request.getParameter("mdp");
+        int idLoc = Integer.parseInt(request.getParameter("idLoc"));
+        if (nomloc != null && mdp != null && !nomloc.isEmpty() && !mdp.isEmpty()) {
+            // Supposons que vous avez une méthode getLocataireByNom pour obtenir l'objet Locataire
+            Locataire locataire = LocataireDao.find(idLoc);
+
+            if (locataire != null) {
+                locataire.setNom(nomloc);
+                locataire.setMotDePasse(mdp);
+                // Supposons que updateLocataire met à jour l'objet dans la base de données
+                LocataireDao.update(locataire);
+                if(LocataireDao.update(locataire) != null){
+                    System.out.println("locataire mis a jour ");
+                }else {
+                    System.out.println("erreur maj loacataire");
+                }
+                // Redirection ou message de succès
+                request.setAttribute("status", "success");
+                request.getRequestDispatcher("/WEB-INF/jsp/Locataire.jsp").forward(request, response);
+            } else {
+                // Gérer l'erreur : locataire non trouvé
+                request.setAttribute("status", "error");
+                request.getRequestDispatcher("/WEB-INF/jsp/Locataire.jsp").forward(request, response);
+            }
+        } else {
+            // Gérer l'erreur : données invalides
+            request.setAttribute("status", "Données invalides");
+            request.getRequestDispatcher("/WEB-INF/jsp/Locataire.jsp").forward(request, response);
+        }
+    }
+    else if ("login".equals(action)) {
         // L'utilisateur essaie de se connecter
         String name = request.getParameter("name");
         String password = request.getParameter("mdp");
 
-      if (name == null || name.isEmpty() || password == null || password.isEmpty()) {
-    request.setAttribute("status", "Les champs de nom et de mot de passe ne peuvent pas être vides");
+        if (name == null || name.isEmpty() || password == null || password.isEmpty()) {
+            request.setAttribute("status", "Les champs de nom et de mot de passe ne peuvent pas être vides");
 
-    return;
-}
+            return;
+        }
 
         try {
             // Vérifiez si un utilisateur avec le nom et le mot de passe donnés existe dans la base de données
             Utilisateur user = userDao.findUserByNameAndPassword(name, password);
-            Locataire loc=LocataireDao.findLocataireByUtilisateurId(user.getId());
+            if (user.getRole().equals("LOCATAIRE")){
+                Locataire loc=LocataireDao.findLocataireByUtilisateurId(user.getId());
+                if (user != null && loc != null ) {
+                    // L'utilisateur existe, la connexion est réussie
+                    HttpSession session = request.getSession();
+                    session.setAttribute("user", loc);
+                    request.setAttribute("AllUniteLocations", AllUniteLocations);
+                    //System.out.println(user);
+                    // Si la connexion est réussie, définissez l'attribut "success"
+                    request.setAttribute("status", "success");
 
-            if (user != null && loc != null ) {
-                // L'utilisateur existe, la connexion est réussie
-                //HttpSession session = request.getSession();
-                request.setAttribute("user", loc);
-                request.setAttribute("AllUniteLocations", AllUniteLocations);
-                //System.out.println(user);
-                // Si la connexion est réussie, définissez l'attribut "success"
-                request.setAttribute("status", "success");
-                if(user.getRole().equals("LOCATAIRE")){
-                    request.getRequestDispatcher("/WEB-INF/jsp/Locataire.jsp").forward(request, response);
-                }else if (user.getRole().equals("PROPRIETAIRE")) {
-                    request.getRequestDispatcher("/WEB-INF/jsp/Proprietaire.jsp").forward(request, response);
-                }else{
-                    request.getRequestDispatcher("/WEB-INF/jsp/Admin.jsp").forward(request, response);
+                        request.getRequestDispatcher("/WEB-INF/jsp/Locataire.jsp").forward(request, response);
                 }
-
+            }else if (user.getRole().equals("PROPRIETAIRE")) {
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                request.getRequestDispatcher("/WEB-INF/jsp/Proprietaire.jsp").forward(request, response);
+            }else if (user.getRole().equals("ADMIN")){
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                request.getRequestDispatcher("/WEB-INF/jsp/Admin.jsp").forward(request, response);
             } else {
                 // L'utilisateur n'existe pas, la connexion a échoué
                 request.setAttribute("status", "error");
@@ -137,7 +180,7 @@ public class AuthServlet extends HttpServlet {
             System.out.println("Connexion échouée : " + e.getMessage());
         }
     }
-}
+   }
 
 
     public void destroy() {
