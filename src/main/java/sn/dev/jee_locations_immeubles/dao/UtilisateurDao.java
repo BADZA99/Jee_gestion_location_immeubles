@@ -4,6 +4,8 @@ import javax.persistence.*;
 
 import sn.dev.jee_locations_immeubles.Entities.Utilisateur;
 import sn.dev.jee_locations_immeubles.Entities.Locataire;
+import sn.dev.jee_locations_immeubles.dao.LocataireDao;
+
 import java.util.List;
 
 public class UtilisateurDao {
@@ -52,12 +54,34 @@ public class UtilisateurDao {
     return utilisateur;
 }
 
-    public void delete(int id) {
-        Utilisateur utilisateur = entityManager.find(Utilisateur.class, id);
-        if (utilisateur != null) {
-            entityManager.remove(utilisateur);
+    public boolean delete(int id) {
+        EntityTransaction transaction = this.entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Utilisateur utilisateur = entityManager.find(Utilisateur.class, id);
+            if (utilisateur != null) {
+
+                entityManager.remove(utilisateur);
+                //entityManager.flush();
+                transaction.commit();
+                System.out.println("Utilisateur supprimé avec succès : " + utilisateur.getNomUtilisateur());
+                return true; // Suppression réussie
+            } else {
+                System.out.println("Utilisateur non trouvé avec l'ID : " + id);
+                transaction.rollback();
+                return false; // L'utilisateur n'a pas été trouvé
+            }
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Erreur lors de la suppression de l'utilisateur avec l'ID : " + id);
+            throw e; // Relancer l'exception pour être gérée par l'appelant
         }
     }
+
+
+
 
     public Utilisateur find(int id) {
         EntityTransaction transaction = this.entityManager.getTransaction();

@@ -8,9 +8,11 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
+import sn.dev.jee_locations_immeubles.Entities.Immeuble;
 import sn.dev.jee_locations_immeubles.Entities.Utilisateur;
 import sn.dev.jee_locations_immeubles.Entities.Locataire;
 import sn.dev.jee_locations_immeubles.Entities.Unitelocation;
+import sn.dev.jee_locations_immeubles.dao.ImmeubleDao;
 import sn.dev.jee_locations_immeubles.dao.UtilisateurDao;
 import sn.dev.jee_locations_immeubles.dao.LocataireDao;
 import sn.dev.jee_locations_immeubles.dao.UniteLocationDao;
@@ -18,18 +20,21 @@ import sn.dev.jee_locations_immeubles.dao.UniteLocationDao;
 @WebServlet(name = "AuthServletServlet", value = "/AuthServlet-servlet")
 public class AuthServlet extends HttpServlet {
     private String message;
-
+    private List<Immeuble> ALLimmeubles;
    private UtilisateurDao userDao;
    private LocataireDao LocataireDao;
     private List<Unitelocation> AllUniteLocations;
     private UniteLocationDao UniteLocationDao;
+    private List<Utilisateur> AllUtilisateurs;
     public void init() {
         message = "error action null";
         this.userDao = new UtilisateurDao();
         this.LocataireDao = new LocataireDao();
         this.UniteLocationDao = new UniteLocationDao();
         AllUniteLocations=  UniteLocationDao.findAll();
-        //  immeubles = immeubleDao.AllImmeubles();
+        sn.dev.jee_locations_immeubles.dao.ImmeubleDao immeubleDao = new ImmeubleDao();
+        AllUtilisateurs = userDao.findAll();
+        ALLimmeubles = immeubleDao.AllImmeubles();
 
     }
 
@@ -149,6 +154,10 @@ public class AuthServlet extends HttpServlet {
         try {
             // Vérifiez si un utilisateur avec le nom et le mot de passe donnés existe dans la base de données
             Utilisateur user = userDao.findUserByNameAndPassword(name, password);
+            if (user == null) {
+                request.setAttribute("status", "error");
+                request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
+            }
             if (user.getRole().equals("LOCATAIRE")){
                 Locataire loc=LocataireDao.findLocataireByUtilisateurId(user.getId());
                 if (user != null && loc != null ) {
@@ -156,6 +165,7 @@ public class AuthServlet extends HttpServlet {
                     HttpSession session = request.getSession();
                     session.setAttribute("user", loc);
                     request.setAttribute("AllUniteLocations", AllUniteLocations);
+
                     //System.out.println(user);
                     // Si la connexion est réussie, définissez l'attribut "success"
                     request.setAttribute("status", "success");
@@ -169,6 +179,9 @@ public class AuthServlet extends HttpServlet {
             }else if (user.getRole().equals("ADMIN")){
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
+                request.setAttribute("AllUniteLocations", AllUniteLocations);
+                request.setAttribute("ALLimmeubles", ALLimmeubles);
+                request.setAttribute("AllUtilisateurs", AllUtilisateurs);
                 request.getRequestDispatcher("/WEB-INF/jsp/Admin.jsp").forward(request, response);
             } else {
                 // L'utilisateur n'existe pas, la connexion a échoué
@@ -176,6 +189,8 @@ public class AuthServlet extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
             }
         } catch (Exception e) {
+            request.setAttribute("status", "error");
+            request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
             // Si la connexion échoue, définissez l'attribut "failed"
             System.out.println("Connexion échouée : " + e.getMessage());
         }

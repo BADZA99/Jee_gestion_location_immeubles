@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:include page="../../../header.jsp" />
+
 <div class="bg-white  border-4 rounded-lg shadow relative m-10">
 
     <div class="flex items-start justify-between p-5 border-b rounded-t">

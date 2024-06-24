@@ -87,6 +87,6 @@ public Utilisateur(String nomUtilisateur, String motDePasse, String role) {
     }
 
     public String toString() {
-        return "uniteloc [id=" + id + ", nomUtilisateur=" + nomUtilisateur + ", motDePasse=" + motDePasse + ", role=" + role + "]";
+        return "utilisateur [id=" + id + ", nomUtilisateur=" + nomUtilisateur + ", motDePasse=" + motDePasse + ", role=" + role + "]";
     }
 }

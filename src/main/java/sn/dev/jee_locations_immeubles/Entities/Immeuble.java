@@ -115,5 +115,8 @@ public class Immeuble {
         this.unitelocationsById = unitelocationsById;
     }
 
+    public String toString() {
+        return "immeuble [id=" + id + ", nom=" + nom + ", adresse=" + adresse + ", image=" + image + "]";
+    }
 
 }

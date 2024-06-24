@@ -4,12 +4,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 
 import sn.dev.jee_locations_immeubles.Entities.Immeuble;
 import sn.dev.jee_locations_immeubles.Entities.Unitelocation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImmeubleDao {
@@ -30,15 +28,29 @@ public class ImmeubleDao {
     }
 
     public Immeuble update(Immeuble immeuble) {
-        return entityManager.merge(immeuble);
+        entityManager.getTransaction().begin();
+        entityManager.merge(immeuble);
+        entityManager.getTransaction().commit();
+        return immeuble;
     }
 
-    public void delete(int id) {
-        Immeuble immeuble = entityManager.find(Immeuble.class, id);
-        if (immeuble != null) {
-            entityManager.remove(immeuble);
+    public boolean delete(int id) {
+        entityManager.getTransaction().begin();
+        try {
+            Immeuble immeuble = entityManager.find(Immeuble.class, id);
+            if (immeuble != null) {
+                entityManager.remove(immeuble);
+                entityManager.getTransaction().commit();
+                return true;
+            }
+
+        } catch (RuntimeException e) {
+            entityManager.getTransaction().rollback();
+            throw e; // Re-throw the exception to be handled by the caller
         }
+        return false;
     }
+
 
     public Immeuble find(int id) {
         return entityManager.find(Immeuble.class, id);
@@ -68,6 +80,31 @@ public List<Unitelocation> getUnitLocationsByImmeubleId(int id) {
 
     return unitelocationsByImmeuble;
 }
+
+    public boolean deleteUnitLocationsByImmeubleId(int id) {
+        entityManager.getTransaction().begin();
+        try {
+            Immeuble immeuble = entityManager.find(Immeuble.class, id);
+            if (immeuble != null) {
+                List<Unitelocation> unitelocationsByImmeuble = entityManager.createQuery(
+                                "SELECT u FROM Unitelocation u WHERE u.immeubleByImmeubleId = :immeuble", Unitelocation.class)
+                        .setParameter("immeuble", immeuble)
+                        .getResultList();
+
+                for (Unitelocation unitelocation : unitelocationsByImmeuble) {
+                    entityManager.remove(unitelocation);
+                }
+
+                entityManager.getTransaction().commit();
+                return true;
+            }
+        } catch (RuntimeException e) {
+            entityManager.getTransaction().rollback();
+            throw e;
+        }
+        return false;
+    }
+
 }
 
 

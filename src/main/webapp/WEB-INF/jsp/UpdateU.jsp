@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="sn.dev.jee_locations_immeubles.Entities.Immeuble" %>
+<%@ page import="sn.dev.jee_locations_immeubles.Entities.Unitelocation" %>
 
 <%
-    Immeuble immeuble = (Immeuble) request.getAttribute("immeuble");
+    Unitelocation unit = (Unitelocation) request.getAttribute("unit");
 
 %>
 <!DOCTYPE html>
@@ -63,28 +63,28 @@
 
     <div class="p-6 space-y-6">
         <form action="Admin-servlet" method="post">
-            <input type="hidden" name="action" value="updateImm2">
-            <input type="hidden" name="idImm" value="<%=immeuble.getId()%>">
+            <input type="hidden" name="action" value="updateU2">
+            <input type="hidden" name="idIU" value="<%=unit.getId()%>">
             <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-3">
-                    <label for="product-name" class="text-sm font-medium text-gray-900 block mb-2">Nom</label>
-                    <input type="text"  name="nom" id="product-name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"  required="" value="<%=immeuble.getNom()%>">
+                    <label for="product-name" class="text-sm font-medium text-gray-900 block mb-2">Nombre piece</label>
+                    <input type="text"  name="nbpieces" id="product-name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"  required="" value="<%=unit.getNombrePieces()%>">
                 </div>
                 <div class="col-span-6 sm:col-span-3">
-                    <label for="category" class="text-sm font-medium text-gray-900 block mb-2">Adresse</label>
-                    <input type="text" name="adresse" id="category" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Electronics" value="<%=immeuble.getAdresse()%>">
+                    <label for="category" class="text-sm font-medium text-gray-900 block mb-2">loyer</label>
+                    <input type="text" name="loyer" id="category" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Electronics" value="<%=unit.getLoyer()%>">
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                     <label for="brand" class="text-sm font-medium text-gray-900 block mb-2">Image</label>
-                    <input type="text" name="image" id="brand" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Apple" required="" value="<%=immeuble.getImage()%>">
+                    <input type="text" name="image" id="brand" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Apple" required="" value="<%=unit.getImage()%>">
                 </div>
                 <div class="col-span-6 sm:col-span-3">
-                    <label for="price" class="text-sm font-medium text-gray-900 block mb-2">Equipements</label>
-                    <input type="text" name="equipement" id="price" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="$2300" required="" value="<%=immeuble.getEquipements()%>">
+                    <label for="price" class="text-sm font-medium text-gray-900 block mb-2">superficie</label>
+                    <input type="text" name="superficie" id="price" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="$2300" required="" value="<%=unit.getSuperficie()%>">
                 </div>
                 <div class="col-span-full">
-                    <label for="product-details" class="text-sm font-medium text-gray-900 block mb-2">Description</label>
-                    <textarea id="product-details" name="description" rows="6" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-4"  ><%=immeuble.getDescription()%></textarea>
+                    <label for="product-details" class="text-sm font-medium text-gray-900 block mb-2">num unite</label>
+                    <textarea id="product-details" name="numUnite" rows="6" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-4"  ><%=unit.getNumeroUnite()%></textarea>
                 </div>
             </div>
           <div class="p-6 border-t border-gray-200 rounded-b">

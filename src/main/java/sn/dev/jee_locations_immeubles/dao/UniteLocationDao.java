@@ -2,6 +2,7 @@ package sn.dev.jee_locations_immeubles.dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import sn.dev.jee_locations_immeubles.Entities.Unitelocation;
@@ -16,27 +17,88 @@ public class UniteLocationDao {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("default");
         this.entityManager = factory.createEntityManager();
     }
+
     public Unitelocation save(Unitelocation unitelocation) {
-        entityManager.persist(unitelocation);
-        return unitelocation;
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.persist(unitelocation);
+            entityManager.flush();
+            transaction.commit();
+            return unitelocation;
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        }
     }
 
     public Unitelocation update(Unitelocation unitelocation) {
-        return entityManager.merge(unitelocation);
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            unitelocation = entityManager.merge(unitelocation);
+            entityManager.flush();
+            transaction.commit();
+            return unitelocation;
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        }
     }
 
-    public void delete(int id) {
-        Unitelocation unitelocation = entityManager.find(Unitelocation.class, id);
-        if (unitelocation != null) {
-            entityManager.remove(unitelocation);
+    public boolean delete(int id) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Unitelocation unitelocation = entityManager.find(Unitelocation.class, id);
+            if (unitelocation != null) {
+                entityManager.remove(unitelocation);
+                entityManager.flush();
+                transaction.commit();
+                return true;
+            } else {
+                transaction.rollback();
+                return false;
+            }
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
         }
     }
 
     public Unitelocation find(int id) {
-        return entityManager.find(Unitelocation.class, id);
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Unitelocation unitelocation = entityManager.find(Unitelocation.class, id);
+            transaction.commit();
+            return unitelocation;
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        }
     }
 
     public List<Unitelocation> findAll() {
-        return entityManager.createQuery("SELECT u FROM Unitelocation u", Unitelocation.class).getResultList();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            List<Unitelocation> result = entityManager.createQuery("SELECT u FROM Unitelocation u", Unitelocation.class).getResultList();
+            transaction.commit();
+            return result;
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        }
     }
 }
