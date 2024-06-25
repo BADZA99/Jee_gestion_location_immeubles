@@ -1,25 +1,16 @@
 package sn.dev.jee_locations_immeubles.Servlets;
 
 import jakarta.servlet.ServletException;
-import sn.dev.jee_locations_immeubles.Entities.Unitelocation;
-import sn.dev.jee_locations_immeubles.Entities.Contratlocation;
-import sn.dev.jee_locations_immeubles.Entities.Utilisateur;
-import sn.dev.jee_locations_immeubles.dao.LocataireDao;
-import sn.dev.jee_locations_immeubles.dao.ContratLocationDao;
-import sn.dev.jee_locations_immeubles.Entities.Locataire;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import sn.dev.jee_locations_immeubles.Entities.*;
+import sn.dev.jee_locations_immeubles.dao.*;
 
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
-import sn.dev.jee_locations_immeubles.dao.UniteLocationDao;
-import sn.dev.jee_locations_immeubles.dao.UtilisateurDao;
-
-import java.awt.datatransfer.DataFlavor;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
 import java.util.Calendar;
-import java.util.List;
-import java.time.LocalDate;
+import java.util.Date;
 
 @WebServlet(name = "LocataireServlet", value = "/LocataireServlet")
 public class LocataireServlet extends HttpServlet {
@@ -28,11 +19,13 @@ public class LocataireServlet extends HttpServlet {
     private UtilisateurDao UtilisateurDao;
     private UniteLocationDao UniteLocationDao;
     private ContratLocationDao ContratLocationDao;
+    private DemandeLocationDao DemandeLocationDao;
     public void init() {
         this.LocataireDao = new LocataireDao();
         this.UtilisateurDao = new UtilisateurDao();
         this.UniteLocationDao = new UniteLocationDao();
         this.ContratLocationDao = new ContratLocationDao();
+        this.DemandeLocationDao = new DemandeLocationDao();
     }
 
     @Override
@@ -97,9 +90,14 @@ public class LocataireServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ServletException {
         String nom = request.getParameter("nom");
         String mdp = request.getParameter("mdp");
-        //idUtilisateur
+        String action = request.getParameter("action");
+
+        //sendDemand
         int idLoc = Integer.parseInt(request.getParameter("idLoc"));
         int idUtilisateur = Integer.parseInt(request.getParameter("idUtilisateur"));
+        //System.out.println("action=" + action);
+        //System.out.println("idUtilisateur=" + idUtilisateur);
+        //System.out.println("idLoc=" + idLoc);
         if (nom != null && mdp != null && !nom.isEmpty() && !mdp.isEmpty()) {
 
             Locataire locataire = LocataireDao.find(idLoc);
@@ -128,7 +126,32 @@ public class LocataireServlet extends HttpServlet {
                 request.setAttribute("status", "error");
                 request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
             }
-        } else {
+        }
+        else if ("sendDemand".equals(action)) {
+            try{
+                int uniteLocationId = Integer.parseInt(request.getParameter("uniteLocationId"));
+                Demandelocation newDemandeLocation = new Demandelocation();
+                newDemandeLocation.setDateDemande(new java.sql.Date(new Date().getTime()));
+                newDemandeLocation.setLocataireId(idLoc);
+                newDemandeLocation.setUniteLocationId(uniteLocationId);
+                //STATUT ENUM('EN_ATTENTE', 'ACCEPTEE', 'REFUSEE') NOT NULL DEFAULT 'EN_ATTENTE',
+                newDemandeLocation.setStatut("EN_ATTENTE");
+                Demandelocation saved =DemandeLocationDao.save(newDemandeLocation);
+
+                if (saved != null) {
+                    System.out.println("demande envoyeee "+saved);
+                    request.getRequestDispatcher("/WEB-INF/jsp/success.jsp").forward(request, response);
+                }else{
+
+                    request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                }
+            }catch (Exception e) {
+                // Si la connexion échoue, définissez l'attribut "failed"
+                System.out.println("erreur lors de l'envoie de la demande : " + e.getMessage());
+            }
+
+        }
+        else {
             // Gérer l'erreur : données invalides
             request.setAttribute("status", "Données invalides");
             request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);

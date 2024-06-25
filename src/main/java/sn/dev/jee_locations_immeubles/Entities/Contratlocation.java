@@ -26,11 +26,6 @@ public class Contratlocation {
     @OneToMany(mappedBy = "contratlocationByContratLocationId")
     private Collection<Paiement> paiementsById;
 
-
-
-
-
-
     @Basic
     @Column(name = "Statut")
     private String statut;

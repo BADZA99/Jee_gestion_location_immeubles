@@ -24,9 +24,11 @@ public class LocataireDao {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
+            // Imprimez les informations de l'objet locataire et le message d'erreur complet
+            System.out.println("erreur save loc " + locataire);
+            e.printStackTrace();
             throw e;
         }
-        //System.out.println("apres save "+ utilisateur);
         return locataire;
     }
 

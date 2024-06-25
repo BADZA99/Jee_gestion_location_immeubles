@@ -73,6 +73,7 @@ public class Locataire {
         if (!Objects.equals(nom, locataire.nom)) return false;
         if (!Objects.equals(email, locataire.email)) return false;
         if (!Objects.equals(motDePasse, locataire.motDePasse)) return false;
+        if (!Objects.equals(idUtilisateur, locataire.idUtilisateur)) return false;
 
         return true;
     }
@@ -83,6 +84,7 @@ public class Locataire {
         result = 31 * result + (nom != null ? nom.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (motDePasse != null ? motDePasse.hashCode() : 0);
+        result = 31 * result + (idUtilisateur != null ? idUtilisateur.hashCode() : 0);
         return result;
     }
 

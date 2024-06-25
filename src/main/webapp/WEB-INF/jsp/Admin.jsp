@@ -2,12 +2,16 @@
 <%@ page import="sn.dev.jee_locations_immeubles.Entities.Utilisateur" %>
 <%@ page import="sn.dev.jee_locations_immeubles.Entities.Immeuble" %>
 <%@ page import="sn.dev.jee_locations_immeubles.Entities.Unitelocation" %>
+<%@ page import="sn.dev.jee_locations_immeubles.Entities.Demandelocation" %>
+<%@ page import="sn.dev.jee_locations_immeubles.Entities.Contratlocation" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     Utilisateur connctedUser = (Utilisateur) session.getAttribute("user");
     List<Immeuble> ALLimmeubles = (List<Immeuble>) request.getAttribute("ALLimmeubles");
     List<Unitelocation> allUniteLocations = (List<Unitelocation>) request.getAttribute("AllUniteLocations");
     List<Utilisateur> AllUtilisateurs = (List<Utilisateur>) request.getAttribute("AllUtilisateurs");
+    List<Demandelocation> AllDemandelocation = (List<Demandelocation>) request.getAttribute("AllDemandelocation");
+    List<Contratlocation> AllContratlocation = (List<Contratlocation>) request.getAttribute("AllContratlocation");
 %>
 <!DOCTYPE html>
 <html>
@@ -67,8 +71,11 @@
                     <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="about">Mes infos</a></li>
                     <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="contact">Les Immeubles</a></li>
                     <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="services">Les Unites locations</a></li>
+                    <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="demandesloc">Les demandes de locations</a></li>
+                    <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="contratLoc">Les contrat de locations</a></li>
                     <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="AjoutU">Ajouter une Unite location</a></li>
                     <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="addImm">Ajouter Immeuble</a></li>
+                    <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="addUser">Ajouter UN UTILISATEUR</a></li>
                 </ul>
             </div>
         </div>
@@ -222,6 +229,57 @@
 
       `,
 
+        addUser: `
+          <div class="p-10">
+    <h1 class="mb-8 font-extrabold text-4xl">Register</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <form action="AuthServlet-servlet" method="post">
+            <div>
+                <input type="hidden" name="action" value="registerUser">
+
+                <label class="block font-semibold" for="nom">Nom</label>
+                <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="nom" type="text" name="nom" required="required" autofocus="autofocus">
+            </div>
+
+
+            <div class="flex w-full justify-between mt-4 items-center">
+                <span>AJOUTER UN </span>
+                <select class="w-full/3 p-2 border-2 " name="role" >
+                    <option value="ADMIN">ADMIN</option>
+                </select>
+            </div>
+
+            <div class="mt-4">
+                <label class="block font-semibold" for="mdp">Mot de passe</label>
+                <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="mdp" type="password" name="mdp" required="required" autocomplete="new-password">
+            </div>
+
+            <div class="flex items-center justify-between mt-8">
+                <button type="submit" class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">Inscription</button>
+                <a class="font-semibold" href="index-servlet?action=login">
+                    deja inscrit ?
+                </a>
+            </div>
+        </form>
+
+        <aside class="">
+            <div class="bg-gray-100 p-8 rounded">
+                <h2 class="font-bold text-2xl">Instructions</h2>
+                <ul class="list-disc mt-4 list-inside">
+
+                    <li>Users must not use offensive, vulgar, or otherwise inappropriate language in their username or profile information</li>
+                    <li>Users must not create multiple accounts for the same person.</li>
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+</div>
+
+
+      `,
+
         addImm: `
             <form action="Admin-servlet" method="post" class="w-[60%] mx-auto"  enctype="multipart/form-data">
             <div>
@@ -316,6 +374,63 @@
             <td class="px-6 py-4 whitespace-nowrap">
                 <a href="Admin-servlet?action=updateU&UId=<%= unite.getId() %>" class="px-4 py-2 cursor-pointer font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue active:bg-blue-600 transition duration-150 ease-in-out">Edit</a>
                 <a href="Admin-servlet?action=deleteU&UId=<%= unite.getId() %>" class="ml-2 px-4 cursor-pointer py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out">Delete</a>
+            </td>
+        </tr>
+        <% } %>
+    </tbody>
+</table>
+
+`,
+
+        demandesloc: `
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead>
+        <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date demande</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">locataire id</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">unite location id</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+        </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+        <% for (Demandelocation unite : AllDemandelocation) { %>
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap"><%= unite.getDateDemande() %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= unite.getStatut() %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= unite.getLocataireId() %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= unite.getUniteLocationId() %></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <a href="Admin-servlet?action=updateDemande&demandeId=<%= unite.getId() %>" class="px-4 py-2 cursor-pointer font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue active:bg-blue-600 transition duration-150 ease-in-out">Edit</a>
+
+            </td>
+        </tr>
+        <% } %>
+    </tbody>
+</table>
+
+`,
+        contratLoc: `
+   <table class="min-w-full divide-y divide-gray-200">
+    <thead>
+        <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date debut</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date fin</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">unite location id</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">locataire id</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+        </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+        <% for (Contratlocation unite : AllContratlocation) { %>
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap"><%= unite.getDateDebut() %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= unite.getDateFin() %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= unite.getUnitelocationByUniteLocationId().getId() %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= unite.getLocataireByLocataireId().getId() %></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <a href="Admin-servlet?action=updateContrat&contratId=<%= unite.getId() %>" class="px-4 py-2 cursor-pointer font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue active:bg-blue-600 transition duration-150 ease-in-out">Edit</a>
+
             </td>
         </tr>
         <% } %>

@@ -64,7 +64,7 @@
                 <ul class="mt-4">
                     <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="home">Home</a></li>
                     <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="about">Mes infos</a></li>
-                    <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="contact">Contact</a></li>
+                    <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="SendDemandeLoc">demander location</a></li>
                     <li class="mb-2"><a href="#" class="block hover:text-indigo-400" data-page="services">Les Unites locations</a></li>
                 </ul>
             </div>
@@ -218,7 +218,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.12.0/dist/sweetalert2.min.css
                 </p>
             </div>
               <a href="LocataireServlet?action=demandeLoc&idUniteLoc=<%= uniteLocation.getId() %>&idLocataire=<%= connctedUser.getId() %>" class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">
-    demander location
+    demander contrat location
 </a>
 
         </div>
@@ -230,9 +230,38 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.12.0/dist/sweetalert2.min.css
 
 </div>
       `,
-        contact: `
-        <h1 class="text-2xl font-semibold">Contact Us</h1>
-        <p>... Contact content goes here ...</p>
+        SendDemandeLoc: `
+      <div class="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md w-full">
+        <h1 class="text-center text-2xl font-bold mb-6">Demande Location</h1>
+        <form action="LocataireServlet" method="post">
+          <input type="hidden" name="action" value="sendDemand">
+                  <input type="hidden" name="idLoc" value="<%=connctedUser.getId()%>">
+                  //juste pour eviter une erreur
+                       <input type="hidden" name="idUtilisateur" value="<%=connctedUser.getIdUtilisateur()%>">
+            <div class="mb-4">
+                <label for="unitLocation" class="block text-gray-700 text-sm font-bold mb-2">Sélectionnez une unité de location</label>
+                <select id="unitLocation" name="uniteLocationId" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5">
+                    <option value="" disabled selected>Choisissez une unité de location</option>
+                    <%
+
+                        if (allUniteLocations != null) {
+                            for (Unitelocation unit : allUniteLocations) {
+                    %>
+                        <option value="<%= unit.getId() %>"><%= unit.getNumeroUnite() %></option>
+                    <%
+                            }
+                        }
+                    %>
+                </select>
+            </div>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full" type="submit">
+                Envoyer Demande
+            </button>
+        </form>
+    </div>
+</div>
+
       `,
     };
 

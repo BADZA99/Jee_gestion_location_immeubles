@@ -12,6 +12,10 @@ import sn.dev.jee_locations_immeubles.Entities.Immeuble;
 import sn.dev.jee_locations_immeubles.Entities.Utilisateur;
 import sn.dev.jee_locations_immeubles.Entities.Locataire;
 import sn.dev.jee_locations_immeubles.Entities.Unitelocation;
+import sn.dev.jee_locations_immeubles.Entities.Contratlocation;
+import sn.dev.jee_locations_immeubles.dao.ContratLocationDao;
+import sn.dev.jee_locations_immeubles.Entities.Demandelocation;
+import sn.dev.jee_locations_immeubles.dao.DemandeLocationDao;
 import sn.dev.jee_locations_immeubles.dao.ImmeubleDao;
 import sn.dev.jee_locations_immeubles.dao.UtilisateurDao;
 import sn.dev.jee_locations_immeubles.dao.LocataireDao;
@@ -24,17 +28,28 @@ public class AuthServlet extends HttpServlet {
    private UtilisateurDao userDao;
    private LocataireDao LocataireDao;
     private List<Unitelocation> AllUniteLocations;
+    private List<Demandelocation> AllDemandelocation;
+    private List<Contratlocation> AllContratlocation;
     private UniteLocationDao UniteLocationDao;
+
+    private DemandeLocationDao DemandeLocationDao;
+    private ContratLocationDao contratLocationDao;
     private List<Utilisateur> AllUtilisateurs;
+
+
     public void init() {
         message = "error action null";
         this.userDao = new UtilisateurDao();
         this.LocataireDao = new LocataireDao();
         this.UniteLocationDao = new UniteLocationDao();
+        this.contratLocationDao = new ContratLocationDao();
+        this.DemandeLocationDao = new DemandeLocationDao();
         AllUniteLocations=  UniteLocationDao.findAll();
         sn.dev.jee_locations_immeubles.dao.ImmeubleDao immeubleDao = new ImmeubleDao();
         AllUtilisateurs = userDao.findAll();
         ALLimmeubles = immeubleDao.AllImmeubles();
+        AllDemandelocation=DemandeLocationDao.findAll();
+        AllContratlocation=contratLocationDao.findAll();
 
     }
 
@@ -53,7 +68,9 @@ public class AuthServlet extends HttpServlet {
 
             // Rediriger l'utilisateur vers la page de connexion ou la page d'accueil
             request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
-        }
+        }else if ("addUser".equals(action)) {
+             request.getRequestDispatcher("/WEB-INF/jsp/AjoutAdmin.jsp").forward(request, response);
+         }
     }
 
     // dopost 
@@ -76,21 +93,22 @@ public class AuthServlet extends HttpServlet {
             user.setNomUtilisateur(name);
             user.setMotDePasse(password);
             user.setRole(role);
-            System.out.println("avant save "+ user);
-            userDao.save(user);
-
-            if(user.getRole().equals("LOCATAIRE")){
-                Locataire locataire = new Locataire();
-                locataire.setNom(name);
-                locataire.setMotDePasse(password);
-                locataire.setIdUtilisateur(user.getId());
-                locataire.setEmail("");
+            //System.out.println("avant save "+ user.getRole());
+            Utilisateur Newuser= userDao.save(user);
+            System.out.println("apres save "+ Newuser);
+            Locataire locataire = new Locataire();
+            if(Newuser.getRole().equals("LOCATAIRE")){
+                //Locataire locataire = new Locataire();
+                locataire.setNom(Newuser.getNomUtilisateur());
+                locataire.setMotDePasse(Newuser.getMotDePasse());
+                locataire.setIdUtilisateur(Newuser.getId());
+                locataire.setEmail(Newuser.getId()+"@locataire.com");
                 LocataireDao.save(locataire);
                 System.out.println("New loc "+ LocataireDao.save(locataire));
             }
 
-            if(userDao.save(user)!= null){
-                System.out.println(userDao.save(user));
+            if(Newuser!= null && locataire!=null ){
+                System.out.println(Newuser);
                 //System.out.println("insertion reussi");
                 // Si l'inscription est réussie, définissez l'attribut "success"
                 request.setAttribute("status", "success");
@@ -108,7 +126,56 @@ public class AuthServlet extends HttpServlet {
         }
 
    
-    } else if ("update".equals(action)) {
+    } else if ("registerUser".equals(action)) {
+        // L'utilisateur essaie de s'inscrire
+        String name = request.getParameter("nom");
+        String password = request.getParameter("mdp");
+        String role = request.getParameter("role");
+        if (name == null || name.isEmpty() || password == null || password.isEmpty() || role == null) {
+            request.setAttribute("status", "vides");
+
+            return;
+        }
+        try {
+            // Créez un nouvel utilisateur et enregistrez-le dans votre base de données
+            Utilisateur user = new Utilisateur();
+            user.setNomUtilisateur(name);
+            user.setMotDePasse(password);
+            user.setRole(role);
+            //System.out.println("avant save "+ user.getRole());
+            Utilisateur Newuser= userDao.save(user);
+            System.out.println("apres save "+ Newuser);
+            Locataire locataire = new Locataire();
+            if(Newuser.getRole().equals("LOCATAIRE")){
+                //Locataire locataire = new Locataire();
+                locataire.setNom(Newuser.getNomUtilisateur());
+                locataire.setMotDePasse(Newuser.getMotDePasse());
+                locataire.setIdUtilisateur(Newuser.getId());
+                locataire.setEmail(Newuser.getId()+"@locataire.com");
+                LocataireDao.save(locataire);
+                System.out.println("New loc "+ LocataireDao.save(locataire));
+            }
+
+            if(Newuser!= null && locataire!=null ){
+                System.out.println(Newuser);
+                //System.out.println("insertion reussi");
+                // Si l'inscription est réussie, définissez l'attribut "success"
+                request.setAttribute("status", "success");
+                request.getRequestDispatcher("/WEB-INF/jsp/register.jsp").forward(request, response);
+            }else {
+                request.setAttribute("status", "error");
+                System.out.println("erreur lors de l'insertion");
+            }
+
+
+        } catch (Exception e) {
+            // Si l'inscription échoue, définissez l'attribut "failed"
+            System.out.println("Inscription échouée 2 : " + e.getMessage());
+            request.setAttribute("status", "error");
+        }
+
+       }
+    else if ("update".equals(action)) {
         String nomloc = request.getParameter("nom");
         String mdp = request.getParameter("mdp");
         int idLoc = Integer.parseInt(request.getParameter("idLoc"));
@@ -175,6 +242,9 @@ public class AuthServlet extends HttpServlet {
             }else if (user.getRole().equals("PROPRIETAIRE")) {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
+                request.setAttribute("AllUniteLocations", AllUniteLocations);
+                request.setAttribute("ALLimmeubles", ALLimmeubles);
+                request.setAttribute("AllUtilisateurs", AllUtilisateurs);
                 request.getRequestDispatcher("/WEB-INF/jsp/Proprietaire.jsp").forward(request, response);
             }else if (user.getRole().equals("ADMIN")){
                 HttpSession session = request.getSession();
@@ -182,6 +252,8 @@ public class AuthServlet extends HttpServlet {
                 request.setAttribute("AllUniteLocations", AllUniteLocations);
                 request.setAttribute("ALLimmeubles", ALLimmeubles);
                 request.setAttribute("AllUtilisateurs", AllUtilisateurs);
+                request.setAttribute("AllContratlocation", AllContratlocation);
+                request.setAttribute("AllDemandelocation", AllDemandelocation);
                 request.getRequestDispatcher("/WEB-INF/jsp/Admin.jsp").forward(request, response);
             } else {
                 // L'utilisateur n'existe pas, la connexion a échoué

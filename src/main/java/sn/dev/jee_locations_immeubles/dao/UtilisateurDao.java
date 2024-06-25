@@ -76,7 +76,8 @@ public class UtilisateurDao {
                 transaction.rollback();
             }
             System.err.println("Erreur lors de la suppression de l'utilisateur avec l'ID : " + id);
-            throw e; // Relancer l'exception pour être gérée par l'appelant
+            e.printStackTrace();
+            throw e;
         }
     }
 
