@@ -68,7 +68,7 @@ public class Admin extends HttpServlet {
                 // Si la connexion échoue, définissez l'attribut "failed"
                 System.out.println("erreur lors de la maj immeuble : " + e.getMessage());
             }
-            //redirection vers la page modif
+            //redirection vers la page modi
         } else if ("deleteImm".equals(action)) {
             int idImm = Integer.parseInt(immIdParam);
             try{
